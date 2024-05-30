@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Sales_Web_MVC.Data;
 namespace Sales_Web_MVC
 {
     public class Program
@@ -5,6 +8,8 @@ namespace Sales_Web_MVC
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            builder.Services.AddDbContext<Sales_Web_MVCContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("Sales_Web_MVCContext") ?? throw new InvalidOperationException("Connection string 'Sales_Web_MVCContext' not found.")));
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
