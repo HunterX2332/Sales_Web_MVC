@@ -1,6 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Sales_Web_MVC.Data;
+using System.Configuration;
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure; // Adiciona o namespace correto para o MySQL
+using Microsoft.Extensions.Configuration; // Adiciona o namespace para IConfiguration
+
 namespace Sales_Web_MVC
 {
     public class Program
@@ -8,19 +12,22 @@ namespace Sales_Web_MVC
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            builder.Services.AddDbContext<Sales_Web_MVCContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("Sales_Web_MVCContext") ?? throw new InvalidOperationException("Connection string 'Sales_Web_MVCContext' not found.")));
 
-            // Add services to the container.
+            // Adiciona o provedor MySQL ao projeto
+            builder.Services.AddDbContext<Sales_Web_MVCContext>(options =>
+                options.UseMySql(builder.Configuration.GetConnectionString("Sales_Web_MVCContext"), new MySqlServerVersion(new Version(8, 0, 2)),
+                mysqlOptions => mysqlOptions.MigrationsAssembly("Sales_Web_MVC")));
+
+            // Adiciona serviços ao container.
             builder.Services.AddControllersWithViews();
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
+            // Configura o pipeline de requisição HTTP.
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                // O valor padrão do HSTS é 30 dias. Você pode querer mudar isso para cenários de produção, veja https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
@@ -39,3 +46,4 @@ namespace Sales_Web_MVC
         }
     }
 }
+
