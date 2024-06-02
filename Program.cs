@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Sales_Web_MVC.Data;
+using Sales_Web_MVC.Services;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Builder;
@@ -20,6 +21,7 @@ namespace Sales_Web_MVC
                 mysqlOptions => mysqlOptions.MigrationsAssembly("Sales_Web_MVC")));
 
             builder.Services.AddScoped<SeedingService>();
+            builder.Services.AddScoped<SellerService>();
 
             // Adiciona serviços ao container.
             builder.Services.AddControllersWithViews();
@@ -42,6 +44,7 @@ namespace Sales_Web_MVC
                     var seedingService = services.GetRequiredService<SeedingService>();
                     seedingService.Seed();
                 }
+
             }
 
             app.UseHttpsRedirection();
