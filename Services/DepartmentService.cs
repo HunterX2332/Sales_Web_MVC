@@ -1,7 +1,9 @@
 ﻿using Sales_Web_MVC.Data;
 using Sales_Web_MVC.Models;
+using System.Threading.Tasks;
 using System.Linq;
 using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 
 namespace Sales_Web_MVC.Services
 {
@@ -13,9 +15,9 @@ namespace Sales_Web_MVC.Services
             _context = context;
         }
 
-        public List<Department> FindAll()
+        public async Task<List<Department>> FindAllAsync()
         {
-            return _context.Department.OrderBy(x => x.Name).ToList();
+            return await _context.Department.OrderBy(x => x.Name).ToListAsync();
         }
     }
 }
